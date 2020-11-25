@@ -6,10 +6,8 @@ import dev.forkhandles.values.Maskers.public
  * Base value type which enables type-safe primitives, along with Validation and Masking.
  */
 abstract class Value<T : Any> @JvmOverloads constructor(
-    val value: T,
-    private val masking: Masking<T> = public
+    val value: T
 ) {
-    override fun toString() = masking(value)
 
     override fun hashCode() = value.hashCode()
 

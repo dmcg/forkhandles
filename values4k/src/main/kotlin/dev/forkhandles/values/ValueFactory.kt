@@ -5,10 +5,11 @@ import dev.forkhandles.result4k.*
 /**
  * Base value type for inline classes which enables type-safe primitives, along with Validation.
  */
-abstract class ValueFactory<DOMAIN, PRIMITIVE>(
+abstract class ValueFactory<DOMAIN, PRIMITIVE: Any>(
     internal val coerceFn: (PRIMITIVE) -> DOMAIN,
     internal val parseFn: (String) -> PRIMITIVE,
-    private val validation: Validation<PRIMITIVE> = ::alwaysValid
+    private val validation: Validation<PRIMITIVE> = ::alwaysValid,
+    val masking: Masking<PRIMITIVE> = Maskers.public
 ) {
     fun resultOf(value: PRIMITIVE): Result<DOMAIN, String> =
         validation.errorMessageOrNull(value)?.let { errorMessage ->
@@ -32,5 +33,5 @@ abstract class ValueFactory<DOMAIN, PRIMITIVE>(
 /**
  * Return a Object/null based on validation.
  */
-fun <DOMAIN, PRIMITIVE> ValueFactory<DOMAIN, PRIMITIVE>.ofOrNull(value: PRIMITIVE): DOMAIN? =
+fun <DOMAIN, PRIMITIVE: Any> ValueFactory<DOMAIN, PRIMITIVE>.ofOrNull(value: PRIMITIVE): DOMAIN? =
     resultOf(value).valueOrNull()

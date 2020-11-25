@@ -11,6 +11,7 @@ import dev.forkhandles.values.Maskers.substring
 import org.junit.jupiter.api.Test
 
 class NotEmptyString private constructor(value: String) : Value<String>(value) {
+    override fun toString() = masking(value)
     companion object : StringValueFactory<NotEmptyString>(::NotEmptyString, String::isNotEmpty)
 }
 
@@ -18,16 +19,19 @@ class NotNegativeInt private constructor(value: Int) : Value<Int>(value) {
     companion object : IntValueFactory<NotNegativeInt>(::NotNegativeInt, { it > 0 })
 }
 
-class HiddenValue private constructor(value: String) : Value<String>(value, masking = hidden('t')) {
-    companion object : StringValueFactory<HiddenValue>(::HiddenValue)
+class HiddenValue private constructor(value: String) : Value<String>(value) {
+    override fun toString() = masking(value)
+    companion object : StringValueFactory<HiddenValue>(::HiddenValue, masking = hidden('t'))
 }
 
-class ObsfucatedValue private constructor(value: String) : Value<String>(value, masking = obfuscated()) {
-    companion object : StringValueFactory<ObsfucatedValue>(::ObsfucatedValue)
+class ObsfucatedValue private constructor(value: String) : Value<String>(value) {
+    override fun toString() = masking(value)
+    companion object : StringValueFactory<ObsfucatedValue>(::ObsfucatedValue, masking = obfuscated())
 }
 
-class SubstringValue private constructor(value: String) : Value<String>(value, masking = substring(3, 5)) {
-    companion object : StringValueFactory<SubstringValue>(::SubstringValue)
+class SubstringValue private constructor(value: String) : Value<String>(value) {
+    override fun toString() = masking(value)
+    companion object : StringValueFactory<SubstringValue>(::SubstringValue, masking = substring(3, 5))
 }
 
 class ValueTest {

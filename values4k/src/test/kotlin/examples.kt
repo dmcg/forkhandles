@@ -18,8 +18,9 @@ class SortCode private constructor(value: String) : StringValue(value) {
     companion object : StringValueFactory<SortCode>(::SortCode, "\\d{6}".regex)
 }
 
-class AccountNumber private constructor(value: String) : Value<String>(value, hidden()) {
-    companion object : StringValueFactory<AccountNumber>(::AccountNumber, "\\d{8}".regex)
+class AccountNumber private constructor(value: String) : Value<String>(value) {
+    override fun toString() = masking(value)
+    companion object : StringValueFactory<AccountNumber>(::AccountNumber, "\\d{8}".regex, hidden())
 }
 
 fun main() {
