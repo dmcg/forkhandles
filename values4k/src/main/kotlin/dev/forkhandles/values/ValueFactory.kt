@@ -8,15 +8,12 @@ import dev.forkhandles.result4k.*
 abstract class ValueFactory<DOMAIN, PRIMITIVE>(
     internal val coerceFn: (PRIMITIVE) -> DOMAIN,
     internal val parseFn: (String) -> PRIMITIVE,
-    private val validation: Validation<PRIMITIVE>? = null
+    private val validation: Validation<PRIMITIVE> = ::alwaysValid
 ) {
-    fun resultOf(value: PRIMITIVE): Result<DOMAIN, String> {
-        val errorMessage = (validation ?: { true }).errorMessageOrNull(value)
-        return when (errorMessage) {
-            null -> Success(coerceFn(value))
-            else -> Failure(errorMessage)
-        }
-    }
+    fun resultOf(value: PRIMITIVE): Result<DOMAIN, String> =
+        validation.errorMessageOrNull(value)?.let { errorMessage ->
+            Failure(errorMessage)
+        } ?: Success(coerceFn(value))
 
     fun of(value: PRIMITIVE): DOMAIN = resultOf(value).recover {
         throw IllegalArgumentException(it)

@@ -5,6 +5,9 @@ package dev.forkhandles.values
  */
 typealias Validation<T> = (T) -> Boolean
 
+@Suppress("UNUSED_PARAMETER")
+fun <T> alwaysValid(value: T) = true
+
 val Int.maxLength: Validation<String> get() = { it.length <= this@maxLength }
 val Int.minLength: Validation<String> get() = { it.length >= this@minLength }
 val Int.exactLength: Validation<String> get() = { it.length == this@exactLength }
