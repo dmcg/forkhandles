@@ -37,3 +37,9 @@ fun <T> Validation<T>.check(value: T) {
     require(this(value))
     { "Validation failed for: ${this@check.javaClass.simpleName}(${value.toString().takeIf { it.isNotBlank() } ?: "\"\""})" }
 }
+
+fun <T> Validation<T>.errorMessageOrNull(value: T): String? =
+    when {
+        this(value) -> null
+        else -> "Validation failed for: ${javaClass.simpleName}(${value.toString().takeIf { it.isNotBlank() } ?: "\"\""})"
+    }

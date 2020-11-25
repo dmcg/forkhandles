@@ -6,43 +6,38 @@ import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.throws
 import dev.forkhandles.result4k.Failure
 import dev.forkhandles.result4k.Success
+import dev.forkhandles.result4k.failureOrNull
 import org.junit.jupiter.api.Test
 
 class ValueFactoryTest {
 
     @Test
     fun `throwable factory`() {
-        assertThat(MyIntValue.of(123), equalTo(MyIntValue.of(123)))
-        assertThat({ MyIntValue.of(0) }, throws<IllegalArgumentException>())
+        assertThat(NotNegativeInt.of(123), equalTo(NotNegativeInt.of(123)))
+        assertThat({ NotNegativeInt.of(0) }, throws<IllegalArgumentException>())
     }
 
     @Test
     fun `nullable factory`() {
-        assertThat(MyValue.ofOrNull("hello"), equalTo(MyValue.of("hello")))
-        assertThat(MyValue.ofOrNull(""), absent())
+        assertThat(NotEmptyString.ofOrNull("hello"), equalTo(NotEmptyString.of("hello")))
+        assertThat(NotEmptyString.ofOrNull(""), absent())
     }
 
     @Test
     fun `result factory`() {
-        assertThat(MyValue.ofResult4k("hello"), equalTo(Success(MyValue.of("hello"))))
-        assertThat(MyValue.ofResult4k("") is Failure<Exception>, equalTo(true))
+        assertThat(NotEmptyString.resultOf("hello"), equalTo(Success(NotEmptyString.of("hello"))))
+        assertThat(NotEmptyString.resultOf(""), equalTo(Failure("Validation failed for: (\"\")")))
     }
 
     @Test
     fun `throwable parse`() {
-        assertThat(MyIntValue.parse("123"), equalTo(MyIntValue.of(123)))
-        assertThat({ MyIntValue.parse("") }, throws<IllegalArgumentException>())
-    }
-
-    @Test
-    fun `nullable parse`() {
-        assertThat(MyIntValue.parseOrNull("123"), equalTo(MyIntValue.of(123)))
-        assertThat(MyIntValue.parseOrNull(""), absent())
+        assertThat(NotNegativeInt.parse("123"), equalTo(NotNegativeInt.of(123)))
+        assertThat(NotNegativeInt.parse(""), absent())
     }
 
     @Test
     fun `result parse`() {
-        assertThat(MyIntValue.parseResult4k("123"), equalTo(Success(MyIntValue.of(123))))
-        assertThat(MyValue.ofResult4k("") is Failure<Exception>, equalTo(true))
+        assertThat(NotNegativeInt.parseToResult("123"), equalTo(Success(NotNegativeInt.of(123))))
+        assertThat(NotEmptyString.parseToResult(""), equalTo(Failure("Validation failed for: (\"\")")))
     }
 }

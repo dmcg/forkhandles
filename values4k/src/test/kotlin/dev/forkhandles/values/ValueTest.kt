@@ -10,12 +10,12 @@ import dev.forkhandles.values.Maskers.obfuscated
 import dev.forkhandles.values.Maskers.substring
 import org.junit.jupiter.api.Test
 
-class MyValue private constructor(value: String) : Value<String>(value) {
-    companion object : StringValueFactory<MyValue>(::MyValue, String::isNotEmpty)
+class NotEmptyString private constructor(value: String) : Value<String>(value) {
+    companion object : StringValueFactory<NotEmptyString>(::NotEmptyString, String::isNotEmpty)
 }
 
-class MyIntValue private constructor(value: Int) : Value<Int>(value) {
-    companion object : IntValueFactory<MyIntValue>(::MyIntValue, { it > 0 })
+class NotNegativeInt private constructor(value: Int) : Value<Int>(value) {
+    companion object : IntValueFactory<NotNegativeInt>(::NotNegativeInt, { it > 0 })
 }
 
 class HiddenValue private constructor(value: String) : Value<String>(value, masking = hidden('t')) {
@@ -33,7 +33,7 @@ class SubstringValue private constructor(value: String) : Value<String>(value, m
 class ValueTest {
     @Test
     fun `toString value`() {
-        assertThat(MyValue.of("hellohello").toString(), equalTo("hellohello"))
+        assertThat(NotEmptyString.of("hellohello").toString(), equalTo("hellohello"))
         assertThat(HiddenValue.of("hellohello").toString(), equalTo("tttttttttt"))
         assertThat(SubstringValue.of("hellohello").toString(), equalTo("hel**ello"))
         assertThat(ObsfucatedValue.of("hello").toString(), object : Matcher<String> {
@@ -46,15 +46,15 @@ class ValueTest {
 
     @Test
     fun `hashcode value`() {
-        assertThat(MyValue.of("hello").hashCode(), equalTo("hello".hashCode()))
+        assertThat(NotEmptyString.of("hello").hashCode(), equalTo("hello".hashCode()))
     }
 
     @Test
     fun equality() {
-        val myValue = MyValue.of("hello")
+        val myValue = NotEmptyString.of("hello")
         assertThat(myValue == myValue, equalTo(true))
-        assertThat(myValue == MyValue.of("hello"), equalTo(true))
-        assertThat(myValue == MyValue.of("hello2"), equalTo(false))
+        assertThat(myValue == NotEmptyString.of("hello"), equalTo(true))
+        assertThat(myValue == NotEmptyString.of("hello2"), equalTo(false))
     }
 
 }

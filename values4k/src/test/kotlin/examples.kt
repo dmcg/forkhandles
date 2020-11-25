@@ -34,4 +34,4 @@ fun main() {
     printOrError { AccountNumber.parse("1234567") } // will blow up
 }
 
-private fun printOrError(fn: () -> Any) = println(resultFrom(fn).recover { it.message })
+private fun printOrError(fn: () -> Any?) = println(resultFrom(fn).recover { it.message })
