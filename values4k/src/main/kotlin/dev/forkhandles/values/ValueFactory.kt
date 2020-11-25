@@ -7,8 +7,8 @@ import dev.forkhandles.result4k.*
  */
 abstract class ValueFactory<DOMAIN, PRIMITIVE>(
     internal val coerceFn: (PRIMITIVE) -> DOMAIN,
-    private val validation: Validation<PRIMITIVE>? = null,
-    internal val parseFn: (String) -> PRIMITIVE
+    internal val parseFn: (String) -> PRIMITIVE,
+    private val validation: Validation<PRIMITIVE>? = null
 ) {
     fun parse(string: String): DOMAIN? = parseToResult(string).valueOrNull()
 
