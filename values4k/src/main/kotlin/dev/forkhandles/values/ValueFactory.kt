@@ -10,12 +10,6 @@ abstract class ValueFactory<DOMAIN, PRIMITIVE>(
     internal val parseFn: (String) -> PRIMITIVE,
     private val validation: Validation<PRIMITIVE>? = null
 ) {
-    fun parse(string: String): DOMAIN? = parseToResult(string).valueOrNull()
-
-    fun of(value: PRIMITIVE): DOMAIN = resultOf(value).recover {
-        throw IllegalArgumentException(it)
-    }
-
     fun resultOf(value: PRIMITIVE): Result<DOMAIN, String> {
         val errorMessage = (validation ?: { true }).errorMessageOrNull(value)
         return when (errorMessage) {
@@ -24,15 +18,22 @@ abstract class ValueFactory<DOMAIN, PRIMITIVE>(
         }
     }
 
+    fun of(value: PRIMITIVE): DOMAIN = resultOf(value).recover {
+        throw IllegalArgumentException(it)
+    }
+
     fun parseToResult(string: String): Result<DOMAIN, String> =
         try {
             resultOf(parseFn(string))
         } catch (x: Exception) {
             Failure(x.message ?: x.javaClass.simpleName)
         }
+
+    fun parse(string: String): DOMAIN? = parseToResult(string).valueOrNull()
 }
 
 /**
  * Return a Object/null based on validation.
  */
-fun <DOMAIN, PRIMITIVE> ValueFactory<DOMAIN, PRIMITIVE>.ofOrNull(value: PRIMITIVE): DOMAIN? = resultOf(value).valueOrNull()
+fun <DOMAIN, PRIMITIVE> ValueFactory<DOMAIN, PRIMITIVE>.ofOrNull(value: PRIMITIVE): DOMAIN? =
+    resultOf(value).valueOrNull()

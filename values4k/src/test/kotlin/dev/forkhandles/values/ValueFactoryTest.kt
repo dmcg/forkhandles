@@ -6,7 +6,6 @@ import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.throws
 import dev.forkhandles.result4k.Failure
 import dev.forkhandles.result4k.Success
-import dev.forkhandles.result4k.failureOrNull
 import org.junit.jupiter.api.Test
 
 class ValueFactoryTest {
