@@ -8,6 +8,7 @@ import dev.forkhandles.values.Maskers.public
 abstract class Value<T : Any> @JvmOverloads constructor(
     val value: T
 ) {
+    abstract override fun toString(): String
 
     override fun hashCode() = value.hashCode()
 

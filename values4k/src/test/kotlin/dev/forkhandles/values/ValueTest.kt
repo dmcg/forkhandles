@@ -16,6 +16,7 @@ class NotEmptyString private constructor(value: String) : Value<String>(value) {
 }
 
 class NotNegativeInt private constructor(value: Int) : Value<Int>(value) {
+    override fun toString() = masking(value)
     companion object : IntValueFactory<NotNegativeInt>(::NotNegativeInt, { it > 0 })
 }
 
